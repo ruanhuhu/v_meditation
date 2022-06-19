@@ -6,7 +6,14 @@
       position="right"
       :style="{ width: '100%', height: '100%' }"
     >
-      <ViewTimer :duration="duration" @finish="onFinish" @stop="onStop" />
+      <ViewTimer
+        :show="showViewTimer"
+        :duration="duration"
+        @finish="onFinish"
+        @stop="onStop"
+        @play-sound="playSound"
+        @stop-sound="stopSound"
+      />
     </van-popup>
   </div>
 </template>
@@ -14,6 +21,7 @@
 import { computed, ref } from "vue";
 import ViewSetting from "./ViewSetting.vue";
 import ViewTimer from "./ViewTimer.vue";
+// import mp3File from "/audio/yq.mp3";
 
 enum VIEW {
   SETTING, // 设置
@@ -35,12 +43,23 @@ const onFinish = () => {
   view.value = VIEW.SETTING;
 };
 
-const onStop= ()=>{
-    view.value = VIEW.SETTING;
-}
+const onStop = () => {
+  view.value = VIEW.SETTING;
+};
+
+
+
+const sound = new Audio('/audio/yq.mp3');
+const playSound = () => {
+  sound.play();
+};
+const stopSound = () => {
+  sound.pause();
+  sound.currentTime = 0;
+};
 </script>
 <style lang="less" scoped>
-.control-box {
+:deep(.control-box) {
   position: absolute;
   left: 50%;
   top: 46%;
@@ -48,18 +67,23 @@ const onStop= ()=>{
   display: flex;
   flex-direction: column;
   align-items: center;
-  :deep(.start-button) {
-    width: 60px;
-    height: 60px;
+  .big-button {
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     margin-bottom: 10px;
+    font-size: 30px;
+    font-weight: bold;
+    opacity: 1 !important;
     .van-icon__image {
-      width: 30px;
-      height: 30px;
-      margin-left: 4px;
+      width: 40px;
+      height: 40px;
+      margin-left: 10px;
     }
   }
-  .duration-button {
+  .todo-button {
+    font-size: 16px;
+    color: #666;
     padding: 10px 12px;
   }
 }

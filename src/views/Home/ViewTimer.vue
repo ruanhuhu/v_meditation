@@ -1,45 +1,35 @@
 <template>
   <div class="view-timer">
-    <div class="timer-box">
+    <div class="control-box">
       <van-button
         :disabled="true"
-        class="timer-button"
+        class="big-button"
         color="linear-gradient(to right, #fc9e2e, #ff6034)"
       >
         {{ formatCountdown(countdown) }}
       </van-button>
-      <span class="stop-button" @click="onStop">结束</span>
+      <span class="todo-button" @click="onStop">结束</span>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
-import mp3File from '../../assets/yq.mp3'
+import { ref, watch } from "vue";
 
 const props = defineProps({
   duration: {
     type: Number,
     required: true,
   },
+  show: {
+    type: Boolean,
+    required: true,
+  },
 });
 
-const emits = defineEmits(["finish", "stop"]);
-
-
-const sound = new Audio(mp3File)
-const playSound = () => {
-  sound.play()
-}
-const stopPlaySound = () => {
-  sound.pause()
-  sound.currentTime = 0
-}
-
-playSound()
+const emits = defineEmits(["finish", "stop","play-sound","stop-sound"]);
 
 // 倒计时
-// const countdown = ref(props.duration * 60 + 3);
-const countdown = ref(props.duration);
+const countdown = ref();
 const countdownTimer = ref();
 
 // 获取倒计时时间
@@ -54,48 +44,42 @@ const formatCountdown = (countdown: number) => {
 const countdownStart = () => {
   countdownTimer.value = setInterval(() => {
     countdown.value--;
+    if(countdown.value==3){
+      emits('play-sound');
+    }
     if (countdown.value === 0) {
       clearInterval(countdownTimer.value);
       emits("finish");
-      playSound()
     }
   }, 1000);
 };
 
-countdownStart();
-
 const onStop = () => {
+  emits('stop-sound');
   clearInterval(countdownTimer.value);
   emits("stop");
-  stopPlaySound()
 };
+
+watch(
+  () => props.show,
+  (show) => {
+    if (show) {
+      emits('play-sound');
+
+      countdown.value = props.duration+3;
+      countdownStart();
+    } else {
+      clearInterval(countdownTimer.value);
+      countdownTimer.value = null;
+      countdown.value = null;
+    }
+  },
+  { immediate: true }
+);
 </script>
 <style lang="less" scoped>
 .view-timer {
   width: 100%;
   height: 100%;
-}
-.timer-box {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 10px;
-  .timer-button {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    font-size: 18px;
-    font-weight: bold;
-    margin-top: 4px;
-    opacity: 1 !important;
-  }
-  .stop-button {
-    padding: 10px 12px;
-    opacity: 0.7;
-  }
 }
 </style>

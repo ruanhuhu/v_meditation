@@ -2,12 +2,12 @@
   <div class="view-setting">
     <div class="control-box">
       <van-button
-        class="start-button"
+        class="big-button"
         color="linear-gradient(to right, #fc9e2e, #ff6034)"
         :icon="startIocn"
         @click="onStart"
       ></van-button>
-      <span class="duration-button" @click="showDurationSelector = true">
+      <span class="todo-button" @click="showDurationSelector = true">
         {{ duration }}分钟</span
       >
     </div>
@@ -122,27 +122,5 @@ const onStart = () => {
 };
 </script>
 <style lang="less" scoped>
-.control-box {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  :deep(.start-button) {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-    .van-icon__image {
-      width: 30px;
-      height: 30px;
-      margin-left: 4px;
-    }
-  }
-  .duration-button {
-    padding: 10px 12px;
-  }
-}
+
 </style>
