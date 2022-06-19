@@ -1,5 +1,4 @@
 <template>
-  <div class="view-timer">
     <div class="control-box">
       <van-button
         :disabled="true"
@@ -10,14 +9,13 @@
       </van-button>
       <span class="todo-button" @click="onStop">结束</span>
     </div>
-  </div>
 </template>
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 
 const props = defineProps({
   duration: {
-    type: Number,
+    type: String,
     required: true,
   },
   show: {
@@ -65,8 +63,7 @@ watch(
   (show) => {
     if (show) {
       emits('play-sound');
-
-      countdown.value = props.duration+3;
+      countdown.value = Number(props.duration)+3;
       countdownStart();
     } else {
       clearInterval(countdownTimer.value);
@@ -78,8 +75,5 @@ watch(
 );
 </script>
 <style lang="less" scoped>
-.view-timer {
-  width: 100%;
-  height: 100%;
-}
+
 </style>
